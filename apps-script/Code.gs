@@ -2,8 +2,13 @@
  * Wedding address collector: Google Apps Script backend
  * -----------------------------------------------------
  * Receives submissions from the address form (index.html) and writes one row per
- * submission to the "Guests" tab of the Google Sheet this script is bound to.
+ * guest to the "Guests" tab of the Google Sheet this script is bound to.
  * Every field gets its own column.
+ *
+ * Spouse / partner: when a guest adds their partner, the partner gets their own row
+ * right below, with the same address, phone, email and timestamp. The two rows don't
+ * flag each other as duplicates, and each First Name cell gets a note naming the other
+ * person, so the pairing is visible without any extra column.
  *
  * One-time setup (full steps in README.md):
  *   1. In your Google Sheet: Extensions → Apps Script. Replace the starter code with this file. Save.
@@ -91,18 +96,25 @@ function doPost(e) {
       return json_({ ok: false, error: 'empty' });
     }
 
+    const partner = partnerRecord_(rec, data);
+
     const sheet = getGuestSheet_(ss);
     const map = ensureHeaders_(sheet);
     const block = readBlock_(sheet, map);
+    const now = new Date();
 
-    const issues = validate_(rec);
-    const dup = findDuplicate_(block, map, rec);
-    if (dup) issues.unshift(dup);
-    rec.review = issues.join('; ');
+    // Both rows are checked against rows that existed before this submission,
+    // so a guest and their partner never flag each other as duplicates.
+    rec.review = reviewFor_(rec, block, map);
+    if (partner) partner.review = reviewFor_(partner, block, map);
 
-    writeRecord_(sheet, map, block.nextRow, rec);
+    writeRecord_(sheet, map, block.nextRow, rec, now);
+    if (partner) {
+      writeRecord_(sheet, map, block.nextRow + 1, partner, now);
+      noteHousehold_(sheet, map, block.nextRow, rec, partner);
+    }
     SpreadsheetApp.flush();
-    return json_({ ok: true });
+    return json_({ ok: true, rows: partner ? 2 : 1 });
   } catch (err) {
     console.error('doPost failed: ' + (err && err.stack ? err.stack : err));
     return json_({ ok: false, error: 'server' });
@@ -198,7 +210,8 @@ function smartCase_(s) {
   if (s !== s.toLowerCase() && s !== s.toUpperCase()) return s;
   return s.toLowerCase()
     .replace(/(^|[\s\-'’.])([a-zß-öø-ÿ])/g, function (m, sep, ch) { return sep + ch.toUpperCase(); })
-    .replace(/\b(ii|iii|iv|vi|vii|viii)\b/gi, function (m) { return m.toUpperCase(); });
+    .replace(/\b(ii|iii|iv|vi|vii|viii)\b/gi, function (m) { return m.toUpperCase(); })
+    .replace(/ And /g, ' and '); // "rose and frank" → "Rose and Frank"
 }
 
 function formatZip_(z) {
@@ -256,6 +269,23 @@ function validate_(r) {
 }
 
 
+/** The spouse/partner row: the guest's household details with the partner's name. Null if none given. */
+function partnerRecord_(rec, p) {
+  const firstName = smartCase_(clean_(p.partnerFirstName, 60));
+  const lastName = smartCase_(clean_(p.partnerLastName, 60));
+  if (!firstName && !lastName) return null;
+  return Object.assign({}, rec, { firstName: firstName, lastName: lastName });
+}
+
+/** Flags for the Review column: duplicate check against earlier rows, then data checks. */
+function reviewFor_(r, block, map) {
+  const issues = validate_(r);
+  const dup = findDuplicate_(block, map, r);
+  if (dup) issues.unshift(dup);
+  return issues.join('; ');
+}
+
+
 /* ───────────────────────────── Duplicate detection ───────────────────────────── */
 
 function splitUnit_(street, apt) {
@@ -292,12 +322,18 @@ function findDuplicate_(block, map, rec) {
   const email = rec.email;
   if (!key && !email) return '';
   const at = function (row, k) { const v = row[map[k] - block.offset]; return v === null || v === undefined ? '' : String(v); };
-  for (let i = block.rows.length - 1; i >= 0; i--) {
+  const nameAt = function (row, i) { return (at(row, 'firstName') + ' ' + at(row, 'lastName')).trim() || 'row ' + (i + 2); };
+  // Same address = likely the same household. Name the earliest entry.
+  for (let i = 0; i < block.rows.length; i++) {
     const row = block.rows[i];
-    const other = { street: at(row, 'street'), apt: at(row, 'apt'), postal: at(row, 'postal') };
-    const name = (at(row, 'firstName') + ' ' + at(row, 'lastName')).trim() || 'row ' + (i + 2);
-    if (key && key === addressKey_(other)) return 'Possible duplicate of ' + name + ' (same address)';
-    if (email && email === at(row, 'email').toLowerCase()) return 'Possible duplicate of ' + name + ' (same email)';
+    if (key && key === addressKey_({ street: at(row, 'street'), apt: at(row, 'apt'), postal: at(row, 'postal') })) {
+      return 'Possible duplicate of ' + nameAt(row, i) + ' (same address)';
+    }
+  }
+  // Same email at a different address is often one relative entering several households
+  // (e.g. an aunt entering her parents), so it's noted, not called a duplicate.
+  for (let i = 0; i < block.rows.length; i++) {
+    if (email && email === at(block.rows[i], 'email').toLowerCase()) return 'Same email as ' + nameAt(block.rows[i], i);
   }
   return '';
 }
@@ -401,10 +437,10 @@ function readBlock_(sheet, map) {
   return { rows: values.slice(0, lastUsed - 1), offset: minC, nextRow: lastUsed + 1 };
 }
 
-function writeRecord_(sheet, map, rowNum, rec) {
+function writeRecord_(sheet, map, rowNum, rec, when) {
   if (rowNum > sheet.getMaxRows()) sheet.insertRowsAfter(sheet.getMaxRows(), 100);
 
-  sheet.getRange(rowNum, map.submitted + 1).setNumberFormat(DATE_FORMAT).setValue(new Date());
+  sheet.getRange(rowNum, map.submitted + 1).setNumberFormat(DATE_FORMAT).setValue(when || new Date());
 
   const cells = COLUMNS
     .filter(function (c) { return c.key !== 'submitted'; })
@@ -421,6 +457,18 @@ function writeRecord_(sheet, map, rowNum, rec) {
       range.setValues([run.map(function (c) { return c.value; })]);
     }
   });
+}
+
+/** Notes on both First Name cells link a guest and the partner they added, with no extra column. */
+function noteHousehold_(sheet, map, rowNum, guest, partner) {
+  try {
+    const name = function (r) { return (r.firstName + ' ' + r.lastName).trim(); };
+    const who = guest.firstName || name(guest) || 'the submitter';
+    sheet.getRange(rowNum, map.firstName + 1).setNote('Submitted together with ' + name(partner) + ' (spouse/partner).');
+    sheet.getRange(rowNum + 1, map.firstName + 1).setNote('Spouse/partner added by ' + name(guest) + '. Phone and email are from ' + who + '’s entry.');
+  } catch (err) {
+    console.error('noteHousehold_ failed: ' + err);
+  }
 }
 
 function contiguousRuns_(cells) {

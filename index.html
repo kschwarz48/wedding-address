@@ -152,6 +152,26 @@
   select.is-empty { color: var(--muted); }
   select option { color: var(--ink); }
 
+  .check { display: flex; align-items: center; gap: 12px; min-height: 44px; margin-top: 18px; }
+  .check input[type=checkbox] {
+    -webkit-appearance: none; appearance: none; flex: none;
+    width: 20px; height: 20px; margin: 0; padding: 0;
+    border: 1px solid var(--ink); border-radius: 0; background: #fff; box-shadow: none;
+    display: grid; place-content: center; cursor: pointer;
+  }
+  .check input[type=checkbox]::before {
+    content: ""; width: 10px; height: 5px; margin-top: -3px;
+    border-left: 1.5px solid #fff; border-bottom: 1.5px solid #fff;
+    transform: rotate(-45deg); opacity: 0;
+  }
+  .check input[type=checkbox]:checked { background: var(--ink); }
+  .check input[type=checkbox]:checked::before { opacity: 1; }
+  .check input[type=checkbox]:focus { box-shadow: none; }
+  .check input[type=checkbox]:focus-visible { outline: 1px solid var(--ink); outline-offset: 3px; }
+  .check label { color: var(--ink); cursor: pointer; padding: 8px 0; }
+  .partner { margin-top: 16px; animation: fade .4s ease both; }
+  .sublabel { margin: 0 0 14px; font: 400 11px/1.6 var(--serif); letter-spacing: .28em; text-transform: uppercase; color: var(--ink); }
+
   .field.invalid input, .field.invalid select { border-bottom-color: var(--error); box-shadow: 0 1px 0 var(--error); }
   .err { margin: 6px 0 0; font: 400 13px/1.4 var(--sans); color: var(--error); }
   .err:empty { display: none; }
@@ -187,6 +207,7 @@
   .done-title {
     margin: 0; padding-left: .06em;
     font: 400 clamp(30px, 8.6vw, 42px)/1.15 var(--display); letter-spacing: .06em; text-transform: uppercase;
+    text-wrap: balance;
   }
   .done-body { margin: 20px auto 0; max-width: 23em; font: 400 17px/1.75 var(--serif); letter-spacing: .005em; color: var(--ink-2); text-wrap: balance; }
   .again {
@@ -242,6 +263,25 @@
               <label for="lastName">Last name</label>
               <input id="lastName" name="lastName" type="text" autocomplete="family-name" autocapitalize="words" autocorrect="off" spellcheck="false" maxlength="60" enterkeyhint="next" aria-describedby="lastName-err" required>
               <p class="err" id="lastName-err" aria-live="polite"></p>
+            </div>
+          </div>
+          <div class="check">
+            <input type="checkbox" id="addPartner" aria-controls="partner-fields">
+            <label for="addPartner">Add my spouse or partner</label>
+          </div>
+          <div class="partner" id="partner-fields" hidden>
+            <p class="sublabel">Spouse / partner</p>
+            <div class="grid">
+              <div class="field s3">
+                <label for="partnerFirstName">First name</label>
+                <input id="partnerFirstName" name="partnerFirstName" type="text" autocomplete="section-partner given-name" autocapitalize="words" autocorrect="off" spellcheck="false" maxlength="60" enterkeyhint="next" aria-describedby="partnerFirstName-err" disabled>
+                <p class="err" id="partnerFirstName-err" aria-live="polite"></p>
+              </div>
+              <div class="field s3">
+                <label for="partnerLastName">Last name</label>
+                <input id="partnerLastName" name="partnerLastName" type="text" autocomplete="section-partner family-name" autocapitalize="words" autocorrect="off" spellcheck="false" maxlength="60" enterkeyhint="next" aria-describedby="partnerLastName-err" disabled>
+                <p class="err" id="partnerLastName-err" aria-live="polite"></p>
+              </div>
             </div>
           </div>
         </fieldset>
@@ -394,6 +434,8 @@
   var rules = {
     firstName: function (v) { return v ? '' : 'First name, please.'; },
     lastName: function (v) { return v ? '' : 'Last name, please.'; },
+    partnerFirstName: function (v) { return v ? '' : 'First name, please.'; },
+    partnerLastName: function (v) { return v ? '' : 'Last name, please.'; },
     street: function (v) { return v ? '' : 'Please enter your street address.'; },
     city: function (v) { return v ? '' : 'Please enter your city or town.'; },
     state: function (v) { return !isUS() || v ? '' : 'Choose your state.'; },
@@ -455,7 +497,7 @@
   function cap(s) { return s && s === s.toLowerCase() ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
 
   /* ── Events ── */
-  var inputs = Array.prototype.slice.call(form.querySelectorAll('input:not(#website), select'));
+  var inputs = Array.prototype.slice.call(form.querySelectorAll('input:not(#website):not([type=checkbox]), select'));
 
   inputs.forEach(function (el) {
     var evt = el.tagName === 'SELECT' ? 'change' : 'input';
@@ -484,6 +526,28 @@
   country.addEventListener('change', applyCountry);
   syncSelectStyle(state);
 
+  /* ── Spouse / partner ── */
+  var addPartner = $('addPartner');
+  var partnerFirst = $('partnerFirstName');
+  var partnerLast = $('partnerLastName');
+  var partnerLastAuto = false; // partner's last name mirrors the guest's until they type their own
+
+  function applyPartner() {
+    var on = addPartner.checked;
+    $('partner-fields').hidden = !on;
+    partnerFirst.disabled = partnerLast.disabled = !on;
+    if (on && !partnerLast.value.trim()) { partnerLast.value = $('lastName').value.trim(); partnerLastAuto = true; }
+    if (!on) { setError(partnerFirst, ''); setError(partnerLast, ''); }
+  }
+  addPartner.addEventListener('change', function () {
+    applyPartner();
+    if (addPartner.checked) partnerFirst.focus();
+  });
+  $('lastName').addEventListener('input', function () {
+    if (partnerLastAuto && addPartner.checked) partnerLast.value = $('lastName').value;
+  });
+  partnerLast.addEventListener('input', function () { partnerLastAuto = false; });
+
   function setSending(on) {
     sending = on;
     submitBtn.disabled = on;
@@ -503,6 +567,8 @@
     return {
       firstName: v('firstName'),
       lastName: v('lastName'),
+      partnerFirstName: addPartner.checked ? v('partnerFirstName') : '',
+      partnerLastName: addPartner.checked ? v('partnerLastName') : '',
       countryCode: country.value,
       country: country.options[country.selectedIndex].text,
       street: v('street'),
@@ -567,16 +633,25 @@
 
     var payload = collect();
     setSending(true);
-    send(payload).then(function () {
-      showThanks(payload.firstName);
+    send(payload).then(function (data) {
+      // An older backend ignores the partner fields. Send the partner as their own entry so no one is lost.
+      var hasPartner = payload.partnerFirstName || payload.partnerLastName;
+      if (hasPartner && !(data && data.rows === 2)) {
+        return send(Object.assign({}, payload, {
+          firstName: payload.partnerFirstName, lastName: payload.partnerLastName, partnerFirstName: '', partnerLastName: '',
+        }));
+      }
+    }).then(function () {
+      showThanks(payload);
     }).catch(function (err) {
       if (window.console) console.warn('Address form: submission failed (' + (err && err.message) + '). If this keeps happening, check the Apps Script deployment: Execute as "Me", Who has access "Anyone".');
       showAlert('Sorry, something went wrong sending your address. Please try again' + (CFG.contact ? ', or ' + CFG.contact : '') + '.');
     }).then(function () { setSending(false); });
   });
 
-  function showThanks(firstName) {
-    $('thanks-name').textContent = firstName ? ', ' + cap(firstName) : '';
+  function showThanks(p) {
+    var names = [p.firstName, p.partnerFirstName].filter(Boolean).map(cap).join('\u00A0& '); // "&" stays with the first name, like the header
+    $('thanks-name').textContent = names ? ', ' + names : '';
     $('form-view').hidden = true;
     var view = $('thanks-view');
     view.hidden = false;
@@ -591,6 +666,8 @@
     inputs.forEach(function (el) { setError(el, ''); });
     applyCountry();
     syncSelectStyle(state);
+    partnerLastAuto = false;
+    applyPartner();
     $('thanks-view').hidden = true;
     $('form-view').hidden = false;
     $('firstName').focus();
@@ -603,6 +680,7 @@
   if (!endpointReady) $('setup-banner').hidden = false;
   if (CFG.closed) { $('form-view').hidden = true; $('closed-view').hidden = false; }
   applyCountry();
+  applyPartner();
 })();
 </script>
 </body>

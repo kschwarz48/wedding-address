@@ -1,6 +1,6 @@
 # Kevin & Casey: wedding address form
 
-An elegant address form hosted free on GitHub Pages. Each submission becomes one row in a Google Sheet, with every field in its own column. Download it as Excel whenever you want.
+An elegant address form hosted free on GitHub Pages. Each guest becomes one row in a Google Sheet, with every field in its own column. Download it as Excel whenever you want.
 
 ```
 Guest scans QR / taps link ──► index.html (GitHub Pages) ──POST──► Apps Script web app ──► Google Sheet "Guests" tab
@@ -63,7 +63,8 @@ Manual route: create a public repo, push these files, then **Settings → Pages 
 ## Using it
 
 - **Excel:** In the Sheet, use **File → Download → Microsoft Excel (.xlsx)**. Use .xlsx, not CSV, because Excel strips the leading zero from ZIP codes when it opens a CSV.
-- **Review column:** Flags possible duplicates (same address written differently, or same email) and anything that looks off (bad ZIP, short phone). Flagged rows are highlighted. Nothing is ever rejected, so you never lose a guest's submission.
+- **Spouse / partner:** If a guest ticks *Add my spouse or partner*, you get two rows, one per person. Both rows share the household's address, phone, email and timestamp. The partner row sits directly below, and each First Name cell has a note naming the other person. There are no extra columns, so the row count is your head count.
+- **Review column:** Flags anything worth a look. *Possible duplicate of …* means the same address was already submitted (it names the earliest entry). *Same email as …* means a different address used an email already on the list, usually one relative entering several households. Bad ZIPs and short phone numbers are flagged too. A couple's two rows never flag each other. Flagged rows are highlighted. Nothing is ever rejected, so you never lose a submission.
 - **Your own columns:** Add columns anywhere, such as *Save-the-date sent* or *Invited*. Don't rename the original headers: the script finds columns by name, and re-adds any that go missing.
 - **Notifications:** **Tools → Notification settings → Edit notifications → Any changes are made**. Daily digest is the quiet option.
 - **Closing the form:** Set `closed: true` in `WEDDING_CONFIG` and run `bash deploy.sh`. Guests then see a thank-you note instead of the form.
