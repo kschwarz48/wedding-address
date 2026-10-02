@@ -1,0 +1,647 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kevin &amp; Casey · Share Your Address</title>
+<meta name="description" content="We’re getting married! Share your mailing address so we can send your save-the-date and invitation.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#F3EDE3">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Kevin &amp; Casey are getting married">
+<meta property="og:description" content="Kindly share your mailing address for our save-the-date and invitation.">
+<meta property="og:image" content="https://kschwarz48.github.io/wedding-address/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Kevin &amp; Casey are getting married. Kindly share your address.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preload" href="fonts/cormorant-garamond-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/jost-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+
+<script>
+  /* ─────────────── EDIT ME ─────────────── */
+  window.WEDDING_CONFIG = {
+    // Your Apps Script Web app URL (Deploy → New deployment → Web app). Ends in /exec.
+    endpoint: 'https://script.google.com/macros/s/AKfycbykthoXcoEJdC-Ifrell-XKKBfd2H-eqWImfpCv5qwLgWn8qCh5KT9qwi5TTfwiaWaF/exec',
+    date: '',       // optional, e.g. 'June 12, 2027'
+    location: '',   // optional, e.g. 'Hudson Valley, New York'
+    contact: '',    // optional, shown if sending fails, e.g. 'text Kevin at (201) 555-0100'
+    closed: false,  // true = stop collecting and show a thank-you note instead of the form
+  };
+</script>
+
+<style>
+  @font-face { font-family: 'Cormorant Garamond'; font-style: normal; font-weight: 400; font-display: swap; src: url(fonts/cormorant-garamond-latin-400-normal.woff2) format('woff2'); }
+  @font-face { font-family: 'Cormorant Garamond'; font-style: normal; font-weight: 500; font-display: swap; src: url(fonts/cormorant-garamond-latin-500-normal.woff2) format('woff2'); }
+  @font-face { font-family: 'Cormorant Garamond'; font-style: italic; font-weight: 400; font-display: swap; src: url(fonts/cormorant-garamond-latin-400-italic.woff2) format('woff2'); }
+  @font-face { font-family: 'Cormorant Garamond'; font-style: italic; font-weight: 500; font-display: swap; src: url(fonts/cormorant-garamond-latin-500-italic.woff2) format('woff2'); }
+  @font-face { font-family: 'Jost'; font-style: normal; font-weight: 400; font-display: swap; src: url(fonts/jost-latin-400-normal.woff2) format('woff2');
+    unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+  @font-face { font-family: 'Jost'; font-style: normal; font-weight: 400; font-display: swap; src: url(fonts/jost-latin-ext-400-normal.woff2) format('woff2');
+    unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+  @font-face { font-family: 'Jost'; font-style: normal; font-weight: 500; font-display: swap; src: url(fonts/jost-latin-500-normal.woff2) format('woff2');
+    unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+  @font-face { font-family: 'Jost'; font-style: normal; font-weight: 500; font-display: swap; src: url(fonts/jost-latin-ext-500-normal.woff2) format('woff2');
+    unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+
+  :root {
+    --paper: #F3EDE3;
+    --card: #FFFCF7;
+    --ink: #2B2621;
+    --ink-soft: #4F463D;
+    --muted: #756656;
+    --line: #E5DACB;
+    --line-strong: #A08F78;
+    --gold: #A9875A;
+    --gold-ink: #86673B;
+    --error: #9C3D28;
+    --field: #FFFEFC;
+    --serif: 'Cormorant Garamond', 'Cormorant', Garamond, Baskerville, 'Times New Roman', serif;
+    --sans: 'Jost', 'Avenir Next', Avenir, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color-scheme: light;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: var(--paper);
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .42 0 0 0 0 .35 0 0 0 0 .27 .085 0 0 0 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+      radial-gradient(120% 70% at 50% 0%, #FAF6EF 0%, rgba(250, 246, 239, 0) 65%);
+    color: var(--ink);
+    font: 400 16px/1.5 var(--sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(32px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+  }
+  [hidden] { display: none !important; }
+  .nowrap { white-space: nowrap; }
+
+  .wrap { max-width: 600px; margin: 0 auto; padding-top: clamp(0px, 4vw, 40px); }
+
+  .setup-banner {
+    margin: 0 0 14px; padding: 11px 14px; border-radius: 3px;
+    background: var(--ink); color: #F3EDE3; font: 400 13px/1.5 var(--sans);
+  }
+  .setup-banner code { font: 12.5px/1 ui-monospace, SFMono-Regular, Menlo, monospace; color: #F0D9B5; }
+
+  .card {
+    position: relative;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    box-shadow: 0 1px 1px rgba(70, 52, 30, .04), 0 22px 50px -24px rgba(70, 52, 30, .32);
+    padding: clamp(42px, 9vw, 66px) clamp(22px, 7vw, 60px) clamp(36px, 7vw, 54px);
+    animation: rise .9s cubic-bezier(.2, .7, .2, 1) both;
+  }
+  .card::before {
+    content: ""; position: absolute; inset: 8px; pointer-events: none;
+    border: 1px solid var(--line);
+  }
+  @keyframes rise { from { opacity: 0; transform: translateY(12px); } }
+
+  /* ── Header ── */
+  .hero { text-align: center; position: relative; }
+  .ornament { display: block; width: 168px; height: 14px; margin: 0 auto 24px; color: var(--gold); }
+  .names {
+    margin: 0;
+    font: 500 clamp(44px, 12.5vw, 66px)/1 var(--serif);
+    letter-spacing: .005em;
+    color: var(--ink);
+  }
+  .amp { font-style: italic; font-weight: 400; color: var(--gold); font-size: 1.04em; margin: 0 .04em; }
+  .tagline {
+    margin: 18px 0 0; padding-left: .34em;
+    font: 500 11.5px/1.4 var(--sans); letter-spacing: .34em; text-transform: uppercase;
+    color: var(--muted);
+  }
+  .details { margin: 10px 0 0; font: italic 400 19px/1.4 var(--serif); color: var(--ink-soft); }
+  .rule { width: 56px; height: 1px; margin: 28px auto 26px; background: var(--gold); opacity: .85; }
+  .intro {
+    margin: 0 auto; max-width: 24em; text-align: center;
+    font: 400 clamp(19px, 4.8vw, 21px)/1.5 var(--serif); color: var(--ink-soft);
+  }
+
+  /* ── Form ── */
+  form { margin-top: clamp(30px, 6vw, 40px); }
+  fieldset { border: 0; padding: 0; margin: 0 0 28px; min-width: 0; }
+  legend {
+    display: block; width: 100%; padding: 0; margin: 0 0 16px;
+    font: italic 500 21px/1.2 var(--serif); color: var(--ink);
+    background: linear-gradient(var(--line), var(--line)) no-repeat 0 62% / 100% 1px;
+  }
+  legend span { background: var(--card); padding-right: 14px; }
+
+  .grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 16px 14px; }
+  .s6 { grid-column: span 6; }
+  .s4 { grid-column: span 4; }
+  .s3 { grid-column: span 3; }
+  .s2 { grid-column: span 2; }
+  @media (max-width: 479px) { .m6 { grid-column: span 6; } }
+
+  .field { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+  label {
+    font: 500 11px/1.25 var(--sans); letter-spacing: .15em; text-transform: uppercase;
+    color: var(--muted);
+  }
+  .opt { font: italic 400 14.5px/0 var(--serif); letter-spacing: .01em; text-transform: none; margin-left: 3px; }
+
+  input, select {
+    width: 100%; height: 50px; margin: 0; padding: 0 14px;
+    font: 400 17px/1.2 var(--sans); color: var(--ink);
+    background-color: var(--field);
+    border: 1px solid var(--line-strong); border-radius: 3px;
+    box-shadow: inset 0 1px 2px rgba(70, 52, 30, .04);
+    transition: border-color .15s ease, box-shadow .15s ease, background-color .15s ease;
+    -webkit-appearance: none; appearance: none;
+  }
+  input::placeholder { color: #B2A48F; opacity: 1; }
+  input:hover, select:hover { border-color: #8C7B64; }
+  input:focus, select:focus {
+    outline: none; background-color: #fff;
+    border-color: var(--gold); box-shadow: 0 0 0 3px rgba(169, 135, 90, .2);
+  }
+  input:-webkit-autofill, input:-webkit-autofill:hover { -webkit-text-fill-color: var(--ink); box-shadow: inset 0 0 0 100px #FBF5E9; }
+  input:-webkit-autofill:focus { box-shadow: inset 0 0 0 100px #fff, 0 0 0 3px rgba(169, 135, 90, .2); }
+  select {
+    padding-right: 40px; cursor: pointer; text-overflow: ellipsis;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%23756656' stroke-width='1.3'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 15px center;
+  }
+  select.is-empty { color: var(--muted); }
+  select option { color: var(--ink); }
+
+  .field.invalid input, .field.invalid select {
+    border-color: var(--error); box-shadow: 0 0 0 3px rgba(156, 61, 40, .12);
+  }
+  .err { margin: 1px 0 0; font: 400 13.5px/1.35 var(--sans); color: var(--error); }
+  .err:empty { display: none; }
+
+  .hp { position: absolute !important; left: -9999px !important; top: auto; width: 1px; height: 1px; overflow: hidden; }
+
+  .alert {
+    margin: 0 0 18px; padding: 12px 14px; border-radius: 2px;
+    border: 1px solid #EACDC3; border-left: 3px solid var(--error);
+    background: #FBF1ED; color: #6B2A1B; font: 400 14.5px/1.5 var(--sans);
+  }
+
+  .submit {
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+    width: 100%; height: 56px; margin-top: 6px; padding: 0 0 0 .28em;
+    border: 0; border-radius: 3px; cursor: pointer;
+    background: var(--ink); color: #FBF7F0;
+    font: 500 12.5px/1 var(--sans); letter-spacing: .28em; text-transform: uppercase;
+    box-shadow: 0 10px 22px -12px rgba(43, 38, 33, .7);
+    transition: background-color .2s ease, transform .1s ease;
+  }
+  .submit:hover { background: #3B342D; }
+  .submit:active { transform: translateY(1px); }
+  .submit:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+  .submit[aria-busy="true"] { cursor: progress; background: #4A423A; }
+  .spin {
+    display: none; width: 14px; height: 14px; border-radius: 50%;
+    border: 1.5px solid rgba(251, 247, 240, .35); border-top-color: #FBF7F0;
+    animation: spin .8s linear infinite;
+  }
+  .submit[aria-busy="true"] .spin { display: inline-block; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .privacy { margin: 18px 0 0; text-align: center; font: italic 400 16.5px/1.4 var(--serif); color: var(--muted); }
+
+  /* ── Thank-you / closed ── */
+  .view { animation: fade .6s ease both; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px); } }
+  .done { text-align: center; outline: none; }
+  .done-title { margin: 0; font: italic 400 clamp(44px, 11vw, 56px)/1.05 var(--serif); color: var(--ink); }
+  .done-body { margin: 18px auto 0; max-width: 22em; font: 400 20px/1.5 var(--serif); color: var(--ink-soft); }
+  .again {
+    margin-top: 30px; padding: 8px 2px 6px; background: none; border: 0; border-bottom: 1px solid currentColor;
+    font: 500 11.5px/1 var(--sans); letter-spacing: .24em; text-transform: uppercase;
+    color: var(--gold-ink); cursor: pointer;
+  }
+  .again:hover { color: var(--ink); }
+  .again:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
+  .signoff { margin: 34px 0 0; font: italic 400 21px/1.3 var(--serif); color: var(--gold-ink); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card, .view { animation: none; }
+    .spin { animation-duration: 2s; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="setup-banner" id="setup-banner" hidden>
+    Preview mode: submissions aren’t connected yet. Paste your Apps Script Web app URL into
+    <code>WEDDING_CONFIG.endpoint</code> in index.html.
+  </div>
+
+  <main class="card" id="card">
+    <header class="hero">
+      <svg class="ornament" viewBox="0 0 168 14" aria-hidden="true">
+        <defs>
+          <linearGradient id="fadeL" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="66" y2="0"><stop offset="0" stop-color="currentColor" stop-opacity="0"/><stop offset="1" stop-color="currentColor"/></linearGradient>
+          <linearGradient id="fadeR" gradientUnits="userSpaceOnUse" x1="168" y1="0" x2="102" y2="0"><stop offset="0" stop-color="currentColor" stop-opacity="0"/><stop offset="1" stop-color="currentColor"/></linearGradient>
+        </defs>
+        <path d="M0 7.5H66" stroke="url(#fadeL)" stroke-width="1"/>
+        <path d="M102 7.5H168" stroke="url(#fadeR)" stroke-width="1"/>
+        <circle cx="72" cy="7.5" r="1.4" fill="currentColor"/>
+        <circle cx="96" cy="7.5" r="1.4" fill="currentColor"/>
+        <path d="M84 1.5L89.5 7.5L84 13.5L78.5 7.5Z" fill="none" stroke="currentColor" stroke-width="1"/>
+      </svg>
+      <h1 class="names">Kevin <span class="amp">&amp;</span> Casey</h1>
+      <p class="tagline">are getting married</p>
+      <p class="details" id="details" hidden></p>
+    </header>
+
+    <div class="view" id="form-view">
+      <div class="rule" aria-hidden="true"></div>
+      <p class="intro">We would love to send you a <span class="nowrap">save-the-date</span> and invitation. Kindly share your mailing address below.</p>
+
+      <form id="address-form" action="#" method="post" novalidate autocomplete="on">
+        <noscript><p class="alert">This form needs JavaScript turned on. If you can’t enable it, please text us your address.</p></noscript>
+        <div class="alert" id="alert" role="alert" hidden></div>
+
+        <fieldset>
+          <legend><span>Your name</span></legend>
+          <div class="grid">
+            <div class="field s3">
+              <label for="firstName">First name</label>
+              <input id="firstName" name="firstName" type="text" autocomplete="given-name" autocapitalize="words" autocorrect="off" spellcheck="false" maxlength="60" enterkeyhint="next" aria-describedby="firstName-err" required>
+              <p class="err" id="firstName-err" aria-live="polite"></p>
+            </div>
+            <div class="field s3">
+              <label for="lastName">Last name</label>
+              <input id="lastName" name="lastName" type="text" autocomplete="family-name" autocapitalize="words" autocorrect="off" spellcheck="false" maxlength="60" enterkeyhint="next" aria-describedby="lastName-err" required>
+              <p class="err" id="lastName-err" aria-live="polite"></p>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend><span>Mailing address</span></legend>
+          <div class="grid">
+            <div class="field s6">
+              <label for="countryCode">Country</label>
+              <select id="countryCode" name="countryCode" autocomplete="country" aria-describedby="countryCode-err"></select>
+              <p class="err" id="countryCode-err" aria-live="polite"></p>
+            </div>
+            <div class="field s4 m6">
+              <label for="street">Street address</label>
+              <input id="street" name="street" type="text" autocomplete="address-line1" autocapitalize="words" autocorrect="off" spellcheck="false" maxlength="120" enterkeyhint="next" aria-describedby="street-err" required>
+              <p class="err" id="street-err" aria-live="polite"></p>
+            </div>
+            <div class="field s2 m6">
+              <label for="apt">Apt / Unit <span class="opt">(optional)</span></label>
+              <input id="apt" name="apt" type="text" autocomplete="address-line2" autocapitalize="characters" autocorrect="off" spellcheck="false" maxlength="40" enterkeyhint="next" aria-describedby="apt-err">
+              <p class="err" id="apt-err" aria-live="polite"></p>
+            </div>
+            <div class="field s6">
+              <label for="city">City</label>
+              <input id="city" name="city" type="text" autocomplete="address-level2" autocapitalize="words" autocorrect="off" spellcheck="false" maxlength="60" enterkeyhint="next" aria-describedby="city-err" required>
+              <p class="err" id="city-err" aria-live="polite"></p>
+            </div>
+            <div class="field s3" id="state-field">
+              <label for="state">State</label>
+              <select id="state" name="region" autocomplete="address-level1" aria-describedby="state-err" required></select>
+              <p class="err" id="state-err" aria-live="polite"></p>
+            </div>
+            <div class="field s3" id="region-field" hidden>
+              <label for="region">State / Province</label>
+              <input id="region" name="region" type="text" autocomplete="address-level1" autocapitalize="words" autocorrect="off" spellcheck="false" maxlength="60" enterkeyhint="next" aria-describedby="region-err" disabled>
+              <p class="err" id="region-err" aria-live="polite"></p>
+            </div>
+            <div class="field s3">
+              <label for="postal" id="postal-label">ZIP code</label>
+              <input id="postal" name="postal" type="text" inputmode="numeric" autocomplete="postal-code" autocorrect="off" spellcheck="false" maxlength="10" enterkeyhint="next" aria-describedby="postal-err" required>
+              <p class="err" id="postal-err" aria-live="polite"></p>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend><span>How to reach you</span></legend>
+          <div class="grid">
+            <div class="field s3 m6">
+              <label for="phone">Phone</label>
+              <input id="phone" name="phone" type="tel" autocomplete="tel" maxlength="30" enterkeyhint="next" aria-describedby="phone-err" required>
+              <p class="err" id="phone-err" aria-live="polite"></p>
+            </div>
+            <div class="field s3 m6">
+              <label for="email">Email <span class="opt">(optional)</span></label>
+              <input id="email" name="email" type="email" autocomplete="email" autocapitalize="off" autocorrect="off" spellcheck="false" maxlength="120" enterkeyhint="send" aria-describedby="email-err">
+              <p class="err" id="email-err" aria-live="polite"></p>
+            </div>
+          </div>
+        </fieldset>
+
+        <div class="hp" aria-hidden="true">
+          <label for="website">Leave this empty</label>
+          <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
+        </div>
+
+        <button class="submit" id="submit" type="submit">
+          <span class="spin" aria-hidden="true"></span><span id="submit-label">Send my address</span>
+        </button>
+        <p class="privacy">Your details are shared only with Kevin &amp; Casey.</p>
+      </form>
+    </div>
+
+    <section class="view done" id="thanks-view" tabindex="-1" aria-labelledby="thanks-title" hidden>
+      <div class="rule" aria-hidden="true"></div>
+      <h2 class="done-title" id="thanks-title">Thank you<span id="thanks-name"></span></h2>
+      <p class="done-body">We have your address and can’t wait to celebrate with you. Keep an eye on your mailbox.</p>
+      <button type="button" class="again" id="again">Add another address</button>
+      <p class="signoff">With love, Kevin &amp; Casey</p>
+    </section>
+
+    <section class="view done" id="closed-view" hidden>
+      <div class="rule" aria-hidden="true"></div>
+      <h2 class="done-title">Thank you</h2>
+      <p class="done-body">We’ve gathered all of our addresses. If yours has changed, please reach out to us directly.</p>
+      <p class="signoff">With love, Kevin &amp; Casey</p>
+    </section>
+  </main>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var CFG = window.WEDDING_CONFIG || {};
+  var COUNTRIES = 'AF:Afghanistan|AX:Åland Islands|AL:Albania|DZ:Algeria|AS:American Samoa|AD:Andorra|AO:Angola|AI:Anguilla|AG:Antigua & Barbuda|AR:Argentina|AM:Armenia|AW:Aruba|AU:Australia|AT:Austria|AZ:Azerbaijan|BS:Bahamas|BH:Bahrain|BD:Bangladesh|BB:Barbados|BY:Belarus|BE:Belgium|BZ:Belize|BJ:Benin|BM:Bermuda|BT:Bhutan|BO:Bolivia|BA:Bosnia & Herzegovina|BW:Botswana|BR:Brazil|IO:British Indian Ocean Territory|VG:British Virgin Islands|BN:Brunei|BG:Bulgaria|BF:Burkina Faso|BI:Burundi|KH:Cambodia|CM:Cameroon|CA:Canada|CV:Cape Verde|BQ:Caribbean Netherlands|KY:Cayman Islands|CF:Central African Republic|TD:Chad|CL:Chile|CN:China|CX:Christmas Island|CC:Cocos (Keeling) Islands|CO:Colombia|KM:Comoros|CG:Congo - Brazzaville|CD:Congo - Kinshasa|CK:Cook Islands|CR:Costa Rica|CI:Côte d’Ivoire|HR:Croatia|CU:Cuba|CW:Curaçao|CY:Cyprus|CZ:Czechia|DK:Denmark|DJ:Djibouti|DM:Dominica|DO:Dominican Republic|EC:Ecuador|EG:Egypt|SV:El Salvador|GQ:Equatorial Guinea|ER:Eritrea|EE:Estonia|SZ:Eswatini|ET:Ethiopia|FK:Falkland Islands|FO:Faroe Islands|FJ:Fiji|FI:Finland|FR:France|GF:French Guiana|PF:French Polynesia|GA:Gabon|GM:Gambia|GE:Georgia|DE:Germany|GH:Ghana|GI:Gibraltar|GR:Greece|GL:Greenland|GD:Grenada|GP:Guadeloupe|GU:Guam|GT:Guatemala|GG:Guernsey|GN:Guinea|GW:Guinea-Bissau|GY:Guyana|HT:Haiti|HN:Honduras|HK:Hong Kong SAR China|HU:Hungary|IS:Iceland|IN:India|ID:Indonesia|IR:Iran|IQ:Iraq|IE:Ireland|IM:Isle of Man|IL:Israel|IT:Italy|JM:Jamaica|JP:Japan|JE:Jersey|JO:Jordan|KZ:Kazakhstan|KE:Kenya|KI:Kiribati|XK:Kosovo|KW:Kuwait|KG:Kyrgyzstan|LA:Laos|LV:Latvia|LB:Lebanon|LS:Lesotho|LR:Liberia|LY:Libya|LI:Liechtenstein|LT:Lithuania|LU:Luxembourg|MO:Macao SAR China|MG:Madagascar|MW:Malawi|MY:Malaysia|MV:Maldives|ML:Mali|MT:Malta|MH:Marshall Islands|MQ:Martinique|MR:Mauritania|MU:Mauritius|YT:Mayotte|MX:Mexico|FM:Micronesia|MD:Moldova|MC:Monaco|MN:Mongolia|ME:Montenegro|MS:Montserrat|MA:Morocco|MZ:Mozambique|MM:Myanmar (Burma)|NA:Namibia|NR:Nauru|NP:Nepal|NL:Netherlands|NC:New Caledonia|NZ:New Zealand|NI:Nicaragua|NE:Niger|NG:Nigeria|NU:Niue|NF:Norfolk Island|KP:North Korea|MK:North Macedonia|MP:Northern Mariana Islands|NO:Norway|OM:Oman|PK:Pakistan|PW:Palau|PS:Palestinian Territories|PA:Panama|PG:Papua New Guinea|PY:Paraguay|PE:Peru|PH:Philippines|PN:Pitcairn Islands|PL:Poland|PT:Portugal|PR:Puerto Rico|QA:Qatar|RE:Réunion|RO:Romania|RU:Russia|RW:Rwanda|WS:Samoa|SM:San Marino|ST:São Tomé & Príncipe|SA:Saudi Arabia|SN:Senegal|RS:Serbia|SC:Seychelles|SL:Sierra Leone|SG:Singapore|SX:Sint Maarten|SK:Slovakia|SI:Slovenia|SB:Solomon Islands|SO:Somalia|ZA:South Africa|GS:South Georgia & South Sandwich Islands|KR:South Korea|SS:South Sudan|ES:Spain|LK:Sri Lanka|BL:St. Barthélemy|SH:St. Helena|KN:St. Kitts & Nevis|LC:St. Lucia|MF:St. Martin|PM:St. Pierre & Miquelon|VC:St. Vincent & Grenadines|SD:Sudan|SR:Suriname|SJ:Svalbard & Jan Mayen|SE:Sweden|CH:Switzerland|SY:Syria|TW:Taiwan|TJ:Tajikistan|TZ:Tanzania|TH:Thailand|TL:Timor-Leste|TG:Togo|TK:Tokelau|TO:Tonga|TT:Trinidad & Tobago|TN:Tunisia|TR:Türkiye|TM:Turkmenistan|TC:Turks & Caicos Islands|TV:Tuvalu|VI:U.S. Virgin Islands|UG:Uganda|UA:Ukraine|AE:United Arab Emirates|GB:United Kingdom|UY:Uruguay|UZ:Uzbekistan|VU:Vanuatu|VA:Vatican City|VE:Venezuela|VN:Vietnam|WF:Wallis & Futuna|EH:Western Sahara|YE:Yemen|ZM:Zambia|ZW:Zimbabwe';
+  var STATES = 'AL:Alabama|AK:Alaska|AZ:Arizona|AR:Arkansas|CA:California|CO:Colorado|CT:Connecticut|DE:Delaware|DC:District of Columbia|FL:Florida|GA:Georgia|HI:Hawaii|ID:Idaho|IL:Illinois|IN:Indiana|IA:Iowa|KS:Kansas|KY:Kentucky|LA:Louisiana|ME:Maine|MD:Maryland|MA:Massachusetts|MI:Michigan|MN:Minnesota|MS:Mississippi|MO:Missouri|MT:Montana|NE:Nebraska|NV:Nevada|NH:New Hampshire|NJ:New Jersey|NM:New Mexico|NY:New York|NC:North Carolina|ND:North Dakota|OH:Ohio|OK:Oklahoma|OR:Oregon|PA:Pennsylvania|RI:Rhode Island|SC:South Carolina|SD:South Dakota|TN:Tennessee|TX:Texas|UT:Utah|VT:Vermont|VA:Virginia|WA:Washington|WV:West Virginia|WI:Wisconsin|WY:Wyoming';
+  var STATES_EXTRA = 'AS:American Samoa|GU:Guam|MP:Northern Mariana Islands|PR:Puerto Rico|VI:U.S. Virgin Islands|AA:Armed Forces Americas (AA)|AE:Armed Forces Europe (AE)|AP:Armed Forces Pacific (AP)';
+
+  var $ = function (id) { return document.getElementById(id); };
+  var form = $('address-form');
+  var country = $('countryCode');
+  var state = $('state');
+  var submitBtn = $('submit');
+  var alertBox = $('alert');
+  var attempted = false;
+  var sending = false;
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var endpointReady = /^https:\/\//.test(CFG.endpoint || '') && !/PASTE_/.test(CFG.endpoint);
+
+  /* ── Build selects ── */
+  function addOptions(select, list) {
+    list.split('|').forEach(function (pair) {
+      var i = pair.indexOf(':');
+      select.appendChild(new Option(pair.slice(i + 1), pair.slice(0, i)));
+    });
+  }
+  function separator() { var o = new Option('──────────', ''); o.disabled = true; return o; }
+
+  country.appendChild(new Option('United States', 'US', true, true));
+  country.appendChild(separator());
+  addOptions(country, COUNTRIES);
+
+  state.appendChild(new Option('Select state', '', true, true));
+  addOptions(state, STATES);
+  state.appendChild(separator());
+  addOptions(state, STATES_EXTRA);
+
+  /* ── Country-dependent fields ── */
+  function isUS() { return country.value === 'US'; }
+
+  function syncSelectStyle(sel) { sel.classList.toggle('is-empty', !sel.value); }
+
+  function applyCountry() {
+    var us = isUS();
+    $('state-field').hidden = !us;
+    state.disabled = !us;
+    $('region-field').hidden = us;
+    $('region').disabled = us;
+    $('postal-label').textContent = us ? 'ZIP code' : 'Postal code';
+    var postal = $('postal');
+    postal.inputMode = us ? 'numeric' : 'text';
+    postal.maxLength = us ? 10 : 16;
+    postal.required = us;
+    postal.autocapitalize = us ? 'off' : 'characters';
+    ['state', 'region', 'postal'].forEach(function (id) { setError($(id), ''); });
+    if (attempted) ['postal', 'phone'].forEach(function (id) { validateField($(id)); });
+  }
+
+  /* ── Validation ── */
+  var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  var rules = {
+    firstName: function (v) { return v ? '' : 'First name, please.'; },
+    lastName: function (v) { return v ? '' : 'Last name, please.'; },
+    street: function (v) { return v ? '' : 'Please enter your street address.'; },
+    city: function (v) { return v ? '' : 'Please enter your city or town.'; },
+    state: function (v) { return !isUS() || v ? '' : 'Choose your state.'; },
+    postal: function (v) {
+      if (!isUS()) return '';
+      if (!v) return 'ZIP code, please.';
+      return /^\d{5}(?:[-\s]?\d{4})?$/.test(v) ? '' : 'Use a 5-digit ZIP.';
+    },
+    phone: function (v) {
+      if (!v) return 'Please enter your phone number.';
+      var d = v.replace(/\D/g, '');
+      if (isUS() && v.charAt(0) !== '+') {
+        return d.length === 10 || (d.length === 11 && d.charAt(0) === '1') ? '' : 'Please include your area code (10 digits).';
+      }
+      return d.length >= 7 && d.length <= 15 ? '' : 'Please enter a valid phone number.';
+    },
+    email: function (v) { return !v || EMAIL_RE.test(v) ? '' : 'Please double-check your email.'; },
+  };
+
+  function setError(el, msg) {
+    var field = el.closest('.field');
+    field.classList.toggle('invalid', !!msg);
+    if (msg) el.setAttribute('aria-invalid', 'true'); else el.removeAttribute('aria-invalid');
+    $(el.id + '-err').textContent = msg;
+  }
+
+  function validateField(el) {
+    var rule = rules[el.id];
+    if (!rule || el.disabled) return '';
+    var msg = rule(el.value.trim());
+    setError(el, msg);
+    return msg;
+  }
+
+  function validateAll() {
+    var first = null;
+    Object.keys(rules).forEach(function (id) {
+      var el = $(id);
+      if (validateField(el) && !first) first = el;
+    });
+    return first;
+  }
+
+  /* ── Friendly formatting ── */
+  function prettyPhone(v) {
+    var t = v.trim();
+    if (!t) return t;
+    var d = t.replace(/\D/g, '');
+    if (t.charAt(0) === '+' && t.indexOf('+1') !== 0) return t.replace(/\s+/g, ' ');
+    var us = d.length === 10 && t.charAt(0) !== '+' ? d : (d.length === 11 && d.charAt(0) === '1' ? d.slice(1) : null);
+    if (us && (isUS() || t.indexOf('+1') === 0)) return '(' + us.slice(0, 3) + ') ' + us.slice(3, 6) + '-' + us.slice(6);
+    return t;
+  }
+  function prettyZip(v) {
+    if (!isUS()) return v.trim();
+    var m = v.trim().match(/^(\d{5})[-\s]?(\d{4})$/);
+    return m ? m[1] + '-' + m[2] : v.trim();
+  }
+  function cap(s) { return s && s === s.toLowerCase() ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
+
+  /* ── Events ── */
+  var inputs = Array.prototype.slice.call(form.querySelectorAll('input:not(#website), select'));
+
+  inputs.forEach(function (el) {
+    var evt = el.tagName === 'SELECT' ? 'change' : 'input';
+    el.addEventListener(evt, function () {
+      if (el.tagName === 'SELECT') syncSelectStyle(el);
+      if (attempted || el.closest('.field').classList.contains('invalid')) validateField(el);
+      alertBox.hidden = true;
+    });
+    el.addEventListener('blur', function () {
+      if (el.id === 'phone') el.value = prettyPhone(el.value);
+      if (el.id === 'postal') el.value = prettyZip(el.value);
+      if (attempted) validateField(el);
+    });
+    // Return/Go moves to the next field instead of submitting early.
+    if (el.tagName === 'INPUT' && el.id !== 'email') {
+      el.addEventListener('keydown', function (e) {
+        if (e.key !== 'Enter' || e.isComposing) return;
+        e.preventDefault();
+        var visible = inputs.filter(function (x) { return !x.disabled && x.offsetParent !== null; });
+        var next = visible[visible.indexOf(el) + 1];
+        if (next) next.focus();
+      });
+    }
+  });
+
+  country.addEventListener('change', applyCountry);
+  syncSelectStyle(state);
+
+  function setSending(on) {
+    sending = on;
+    submitBtn.disabled = on;
+    submitBtn.setAttribute('aria-busy', on ? 'true' : 'false');
+    $('submit-label').textContent = on ? 'Sending…' : 'Send my address';
+  }
+
+  function showAlert(msg) {
+    alertBox.textContent = msg;
+    alertBox.hidden = false;
+    alertBox.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
+  }
+
+  function collect() {
+    var v = function (id) { return $(id).value.trim(); };
+    var us = isUS();
+    return {
+      firstName: v('firstName'),
+      lastName: v('lastName'),
+      countryCode: country.value,
+      country: country.options[country.selectedIndex].text,
+      street: v('street'),
+      apt: v('apt'),
+      city: v('city'),
+      region: us ? state.value : v('region'),
+      postal: prettyZip($('postal').value),
+      phone: prettyPhone($('phone').value),
+      email: v('email'),
+      website: $('website').value,
+    };
+  }
+
+  function wait(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+
+  function send(payload) {
+    var attempt = 0;
+    function once() {
+      var ctrl = window.AbortController ? new AbortController() : null;
+      var timer = ctrl && setTimeout(function () { ctrl.abort(); }, 25000);
+      // Form-encoded body + no custom headers = a "simple" CORS request Apps Script accepts.
+      return fetch(CFG.endpoint, { method: 'POST', body: new URLSearchParams(payload), signal: ctrl ? ctrl.signal : undefined })
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+          if (data && data.ok) return data;
+          var err = new Error((data && data.error) || 'server');
+          err.final = data && (data.error === 'empty' || data.error === 'too_large');
+          throw err;
+        })
+        .finally(function () { if (timer) clearTimeout(timer); });
+    }
+    function attemptSend() {
+      return once().catch(function (err) {
+        attempt += 1;
+        if (attempt < 2 && !err.final) return wait(1200).then(attemptSend);
+        throw err;
+      });
+    }
+    return attemptSend();
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (sending) return;
+    attempted = true;
+    alertBox.hidden = true;
+    ['phone', 'postal'].forEach(function (id) {
+      var el = $(id);
+      el.value = id === 'phone' ? prettyPhone(el.value) : prettyZip(el.value);
+    });
+
+    var firstBad = validateAll();
+    if (firstBad) {
+      firstBad.focus({ preventScroll: true });
+      firstBad.closest('.field').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
+      return;
+    }
+    if (!endpointReady) {
+      showAlert('This form isn’t connected yet. Paste your Apps Script URL into WEDDING_CONFIG.endpoint in index.html.');
+      return;
+    }
+
+    var payload = collect();
+    setSending(true);
+    send(payload).then(function () {
+      showThanks(payload.firstName);
+    }).catch(function (err) {
+      if (window.console) console.warn('Address form: submission failed (' + (err && err.message) + '). If this keeps happening, check the Apps Script deployment: Execute as "Me", Who has access "Anyone".');
+      showAlert('Sorry, something went wrong sending your address. Please try again' + (CFG.contact ? ', or ' + CFG.contact : '') + '.');
+    }).then(function () { setSending(false); });
+  });
+
+  function showThanks(firstName) {
+    $('thanks-name').textContent = firstName ? ', ' + cap(firstName) : '';
+    $('form-view').hidden = true;
+    var view = $('thanks-view');
+    view.hidden = false;
+    $('card').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+    view.focus({ preventScroll: true });
+  }
+
+  $('again').addEventListener('click', function () {
+    form.reset();
+    attempted = false;
+    alertBox.hidden = true;
+    inputs.forEach(function (el) { setError(el, ''); });
+    applyCountry();
+    syncSelectStyle(state);
+    $('thanks-view').hidden = true;
+    $('form-view').hidden = false;
+    $('firstName').focus();
+  });
+
+  /* ── Init ── */
+  var details = [CFG.date, CFG.location].filter(Boolean).join(' · ');
+  if (details) { $('details').textContent = details; $('details').hidden = false; }
+  if (!endpointReady) $('setup-banner').hidden = false;
+  if (CFG.closed) { $('form-view').hidden = true; $('closed-view').hidden = false; }
+  applyCountry();
+})();
+</script>
+</body>
+</html>
