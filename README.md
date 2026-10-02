@@ -96,5 +96,5 @@ deploy.sh              publish to GitHub Pages + generate QR codes
 og-image.png           link-preview card (1200×630)
 apple-touch-icon.png   home-screen icon
 favicon.svg            browser tab icon
-fonts/                 Cormorant Garamond + Jost (SIL Open Font License)
+fonts/                 Libre Caslon Display + Libre Caslon Text + Jost (SIL Open Font License)
 ```
